@@ -31,12 +31,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -254,12 +258,15 @@ public class JearGui extends JFrame implements Observer {
 
 	// JProgressBar
 	private ProgressRenderer renderer;
+	
+	private String myMusic_folder = "myMusic";
 
 	// Constructor. It instantiates the components of the GUI and prepare the
 	// connections for the searchs
 	public JearGui() {
 		// JFrame
-		jear_gui = new JFrame("jEar");			
+		jear_gui = new JFrame("jEar");
+		myMusic_folder = loadProperties();
 
 		// Obtain search links connections
 		search_links.add(new Slink("http://www.zapmusic.me/mp3/", "zapm", 10));
@@ -325,13 +332,35 @@ public class JearGui extends JFrame implements Observer {
 
 		menus[0].setFont(new Font("Arial", Font.PLAIN, 11));
 		menus[1].setFont(new Font("Arial", Font.PLAIN, 11));
+		
 
 		// ProgressBar
 		renderer = new ProgressRenderer(0, 100);
-
+		
 		setComponentsProperties();
 		putComponents();
 		checkListener();
+	}
+	
+	// It loads the configuration from the properties file
+	public static String loadProperties() {		
+		Properties prop = new Properties();
+	    String fileName = System.getProperty("user.dir") + "/jear.config";
+	    InputStream is = null;
+	    
+		try {
+			is = new FileInputStream(fileName);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			prop.load(is);			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return prop.getProperty("music_folder");		
 	}
 
 	// It obtains the info of the columns and adds a download
@@ -381,8 +410,8 @@ public class JearGui extends JFrame implements Observer {
 				+ selected_download.getTitle() + ".mp3";
 
 		if (s == Download.COMPLETE) {
-			File d = new File("myMusic");
-			String path = d.getAbsolutePath() + "\\" + song;
+			File d = new File(myMusic_folder);
+			String path = d.getAbsolutePath() + "\\" + song.trim();			
 			File awesomeSong = new File(path);
 			try {
 				Desktop.getDesktop().open(awesomeSong);
@@ -398,11 +427,10 @@ public class JearGui extends JFrame implements Observer {
 		int s = selected_download.getStatus(); // get the status
 
 		if (s == Download.COMPLETE) {
-			File d = new File("myMusic");
+			File d = new File(myMusic_folder);
 			try {
 				Desktop.getDesktop().open(d);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -597,7 +625,7 @@ public class JearGui extends JFrame implements Observer {
 	}
 
 	private void openMyMusicFolder() {
-		File d = new File("myMusic");
+		File d = new File(myMusic_folder);
 		try {
 			Desktop.getDesktop().open(d);
 		} catch (IOException e) {

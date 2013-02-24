@@ -38,6 +38,8 @@ import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 
+import egui.JearGui;
+
 public class Download extends Observable implements Runnable {
 	private static final int MAX_BUFFER_SIZE = 1024;
 
@@ -74,7 +76,8 @@ public class Download extends Observable implements Runnable {
 
 	// Files variables
 	private RandomAccessFile file = null;
-	private File directory = new File("myMusic");
+	private String myMusic_path = JearGui.loadProperties();
+	private File directory = new File(myMusic_path);
 	private String filename;
 
 	public Download(String sturl, String artist, String title) {
@@ -105,9 +108,16 @@ public class Download extends Observable implements Runnable {
 	}
 
 	private void error() {
+		File file_error;
+		
 		this.status = ERROR;
 		this.icon = IMG_STATUSES[ERROR];
 		stateChanged();
+		
+		if (!filename.equals(null)) {
+			file_error = new File(directory.getPath() + "\\" + filename);
+			file_error.delete();
+		}		
 	}
 
 	public String getArtist() {
@@ -174,8 +184,8 @@ public class Download extends Observable implements Runnable {
 			// Filename comprobations
 			filename = new String(artist + "-" + title);
 			// Check filename length
-			if (filename.length() > 50)
-				filename = filename.substring(1, 50);
+			/*if (filename.length() > 50)
+				filename = filename.substring(1, 50);*/
 			filename = filename + ".mp3";
 
 			file = new RandomAccessFile(directory.getPath() + "\\" + filename,
