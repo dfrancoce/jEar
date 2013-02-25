@@ -107,6 +107,12 @@ public class JearGui extends JFrame implements Observer {
 					page = 0;
 				}
 			}
+			
+			if (finish) {
+				while (dtm.getRowCount() > 0) {
+					dtm.removeRow(0); // Remove search results
+				}
+			}
 		}
 
 		// It sets finish variable
@@ -125,15 +131,17 @@ public class JearGui extends JFrame implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent e) {			
 			for (SearchSlink s: ssl) {
-				s.setFinish(true);
+				s.setFinish(true);				
 			}
 
 			if (txt_search.getText().equals(""))
 				;
 			else {
 				// It starts all the threads
-				while (dtm.getRowCount() > 0)
-					dtm.removeRow(0); // Remove search results				
+				while (dtm.getRowCount() > 0) {
+					dtm.removeRow(0); // Remove search results
+				}
+				
 				Thread t = new Thread(this);
 				t.start();
 			}
@@ -160,12 +168,11 @@ public class JearGui extends JFrame implements Observer {
 				}
 			}
 			
-			// It starts all the threads
 			for (Thread t: ssl_threads) {
 				if (t.getState() == Thread.State.NEW) {
 					t.start();
 				}				
-			}
+			}					
 		}
 	}
 
@@ -416,7 +423,6 @@ public class JearGui extends JFrame implements Observer {
 			try {
 				Desktop.getDesktop().open(awesomeSong);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -427,12 +433,7 @@ public class JearGui extends JFrame implements Observer {
 		int s = selected_download.getStatus(); // get the status
 
 		if (s == Download.COMPLETE) {
-			File d = new File(myMusic_folder);
-			try {
-				Desktop.getDesktop().open(d);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			openMyMusicFolder();			
 		}
 	}
 
@@ -462,7 +463,7 @@ public class JearGui extends JFrame implements Observer {
 				// with version and
 				// author info
 				JFrame aw = new JFrame("About");
-				JLabel lblTitle = new JLabel(" jEar version 0.03\n");
+				JLabel lblTitle = new JLabel(" jEar version 0.04\n");
 				JTextArea txtText = new JTextArea("");
 				JPanel p = new JPanel();
 
@@ -482,7 +483,7 @@ public class JearGui extends JFrame implements Observer {
 						+ "\n\n"
 						+ "You should have received a copy of the GNU General Public License\n"
 						+ "along with jEar.  If not, see <http://www.gnu.org/licenses/>.\n"
-						+ "\n\n" + "Copyright 2012 Daniel Franco Cecilia";
+						+ "\n\n" + "Copyright 2013 Daniel Franco Cecilia";
 
 				txtText.setText(text);
 				txtText.setFont(new Font("Arial", Font.PLAIN, 11));
@@ -626,10 +627,15 @@ public class JearGui extends JFrame implements Observer {
 
 	private void openMyMusicFolder() {
 		File d = new File(myMusic_folder);
+		
 		try {
-			Desktop.getDesktop().open(d);
+			if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+				String cmd = "rundll32 url.dll,FileProtocolHandler " + d.getCanonicalPath();
+				Runtime.getRuntime().exec(cmd);
+			} else {
+				Desktop.getDesktop().edit(d);
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
