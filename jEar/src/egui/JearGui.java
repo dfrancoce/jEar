@@ -99,6 +99,7 @@ public class JearGui extends JFrame implements Observer {
 				s.generateSlinkCompleteUrl();
 				suc = new SearchUconnection(s.getSlinkurl());
 				hucSearch = suc.doConnection();
+				
 				if (page <= s.getmax_page()) {
 					suc.searchData(hucSearch, param, page, s.getSource()); // Search
 					hucSearch.disconnect();
@@ -463,7 +464,7 @@ public class JearGui extends JFrame implements Observer {
 				// with version and
 				// author info
 				JFrame aw = new JFrame("About");
-				JLabel lblTitle = new JLabel(" jEar version 0.04\n");
+				JLabel lblTitle = new JLabel(" jEar version 0.5\n");
 				JTextArea txtText = new JTextArea("");
 				JPanel p = new JPanel();
 
