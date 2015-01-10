@@ -76,7 +76,7 @@ public class Download extends Observable implements Runnable {
 
 	// Files variables
 	private RandomAccessFile file = null;
-	private String myMusic_path = JearGui.loadProperties();
+	private String myMusic_path = JearGui.myMusic_folder;
 	private File directory = new File(myMusic_path);
 	private String filename;
 
@@ -188,7 +188,7 @@ public class Download extends Observable implements Runnable {
 				filename = filename.substring(1, 50);*/
 			filename = filename + ".mp3";
 
-			file = new RandomAccessFile(directory.getPath() + "\\" + filename,
+			file = new RandomAccessFile(directory.getPath() + "/" + filename,
 					"rw");
 			file.seek(downloaded);
 

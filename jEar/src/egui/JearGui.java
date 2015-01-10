@@ -41,11 +41,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -62,7 +59,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -206,18 +202,7 @@ public class JearGui extends JFrame implements Observer {
 
 	// Array of icons used in the application
 		
-	private static Icon[] icons = { new ImageIcon("img/ClearAllMini.png"),
-		new ImageIcon("img/ExitMini.png"),
-		new ImageIcon("img/Cancel.png"),
-		new ImageIcon("img/MyMusic.png"),
-		new ImageIcon("img/Search.png"),
-		new ImageIcon("img/AboutMini.png"),
-		new ImageIcon("img/SearchResults.png"),
-		new ImageIcon("img/Downloads.png"),
-		new ImageIcon("img/ClearMini.png"),
-		new ImageIcon("img/CancelMini.png"),
-		new ImageIcon("img/OpenMini.png"),
-		new ImageIcon("img/OpenFolderMini.png") };;
+	private ImageIcon[] icons = new ImageIcon[13];
 	
 	// Menus
 	private JMenuItem btn_clear;
@@ -267,17 +252,25 @@ public class JearGui extends JFrame implements Observer {
 	// JProgressBar
 	private ProgressRenderer renderer;
 	
-	private String myMusic_folder = "myMusic";
+	public static String myMusic_folder = "myMusic";
+
+	private Properties prop = new Properties();
 
 	// Constructor. It instantiates the components of the GUI and prepare the
 	// connections for the searchs
 	public JearGui() {
+		// Load properties
+		loadProperties();
+
+		// Load icon images
+		loadIconImages();
+
 		// JFrame
 		jear_gui = new JFrame("jEar");
-		myMusic_folder = loadProperties();
+		myMusic_folder = prop.getProperty("music_folder");
 
 		// Obtain search links connections
-		search_links.add(new Slink("http://www.zapmusic.me/mp3/", "zapm", 10));
+		//search_links.add(new Slink("http://www.zapmusic.me/mp3/", "zapm", 10));
 		search_links.add(new Slink("http://www.emp3world.com/search.php?",
 				"emp3", 100));		
 
@@ -349,26 +342,41 @@ public class JearGui extends JFrame implements Observer {
 		putComponents();
 		checkListener();
 	}
-	
+
+	private void loadIconImages() {
+		String path = getClass().getResource("img").getPath();
+		icons[0] = new ImageIcon(path + "/ClearAllMini.png");
+		icons[1] = new ImageIcon(path + "/ExitMini.png");
+		icons[2] = new ImageIcon(path + "/Cancel.png");
+		icons[3] = new ImageIcon(path + "/MyMusic.png");
+		icons[4] = new ImageIcon(path + "/Search.png");
+		icons[5] = new ImageIcon(path + "/AboutMini.png");
+		icons[6] = new ImageIcon(path + "/SearchResults.png");
+		icons[7] = new ImageIcon(path + "/Downloads.png");
+		icons[8] = new ImageIcon(path + "/ClearMini.png");
+		icons[9] = new ImageIcon(path + "/CancelMini.png");
+		icons[10] = new ImageIcon(path + "/OpenMini.png");
+		icons[11] = new ImageIcon(path + "/OpenFolderMini.png");
+		icons[12] = new ImageIcon(path + "/jEar.png");
+
+	}
+
 	// It loads the configuration from the properties file
-	public static String loadProperties() {		
-		Properties prop = new Properties();
-	    String fileName = System.getProperty("user.dir") + "/jear.config";
+	private void loadProperties() {
+		String fileName = getClass().getResource("config/jear.config").getPath();
 	    InputStream is = null;
-	    
+
 		try {
 			is = new FileInputStream(fileName);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
-			prop.load(is);			
+			prop.load(is);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		return prop.getProperty("music_folder");		
 	}
 
 	// It obtains the info of the columns and adds a download
@@ -464,12 +472,12 @@ public class JearGui extends JFrame implements Observer {
 				// with version and
 				// author info
 				JFrame aw = new JFrame("About");
-				JLabel lblTitle = new JLabel(" jEar version 0.5\n");
+				JLabel lblTitle = new JLabel(" jEar version 0.6\n");
 				JTextArea txtText = new JTextArea("");
 				JPanel p = new JPanel();
 
 				lblTitle.setFont(new Font("Arial", 1, 11));
-				lblTitle.setIcon(new ImageIcon("img/jEar.png"));
+				lblTitle.setIcon(icons[12]);
 				lblTitle.setAlignmentX(TOP_ALIGNMENT);
 
 				String text = "jEar is free software: you can redistribute it and/or modify\n"
@@ -501,7 +509,7 @@ public class JearGui extends JFrame implements Observer {
 				aw.pack();
 				aw.setLocationRelativeTo(null);
 				aw.setVisible(true);
-				aw.setIconImage(new ImageIcon("img/AboutMini.png").getImage());
+				aw.setIconImage(icons[5].getImage());
 				aw.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			}
 		});
@@ -689,13 +697,13 @@ public class JearGui extends JFrame implements Observer {
 		jear_gui.add(panel_up, BorderLayout.NORTH);
 		jear_gui.add(panel_center, BorderLayout.CENTER);
 
-		try {
+		/*try {
 			UIManager.setLookAndFeel(UIManager
 					.getCrossPlatformLookAndFeelClassName());
 		} catch (Exception ex) {
 			Logger.getLogger(JearGui.class.getName()).log(Level.SEVERE, null,
 					ex);
-		}
+		}*/
 
 		// JFrame properties
 		jear_gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -707,7 +715,7 @@ public class JearGui extends JFrame implements Observer {
 
 	// Set the properties of the GUI components
 	private void setComponentsProperties() {
-		jear_gui.setIconImage(new ImageIcon("img/jEar.png").getImage());
+		jear_gui.setIconImage(icons[12].getImage());
 
 		// Label properties
 		lbl_search.setFont(new Font("Arial", Font.PLAIN, 11));
