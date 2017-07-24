@@ -14,23 +14,21 @@
 // along with jEar.  If not, see <http://www.gnu.org/licenses/>.
 
 // Copyright 2011 Daniel Franco Cecilia
-// File: Uconnection.java
-// Description: Uconnection structure
+// File: SearchTableModel.java
+// Description: Contains search table TableModel class.
 // Author: dfc
 
-package ewire;
+package org.dfc.ui;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import javax.swing.table.DefaultTableModel;
 
-// Abstract class that defines the connections basics
-public abstract class Uconnection {
-	URL url;
-	String sturl;
-	HttpURLConnection huc;
+// Extends DefaultTableModel. It represents the table where
+// we'll show the results of the search
+public class SearchTableModel extends DefaultTableModel {
+	private static final long serialVersionUID = -8258792007375095960L;
 
-	public Uconnection() {
+	@Override
+	public boolean isCellEditable(int row, int colum) {
+		return false;
 	}
-
-	public abstract HttpURLConnection doConnection();
 }

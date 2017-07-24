@@ -18,7 +18,7 @@
 // Description: Contains class ProgressRenderer for the JProgressBar.
 // Author: dfc
 
-package egui;
+package org.dfc.ui;
 
 import java.awt.Component;
 
@@ -26,24 +26,37 @@ import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-// Extends JProgressBar and implements TableCellRenderer. This class represents
-// the progress bar of the download table which indicates the progress of the
-// download.
-public class ProgressRenderer extends JProgressBar implements TableCellRenderer {
-	private static final long serialVersionUID = -5792948812180557229L;
 
-	// ProgressRenderer constructor. It receives the interval of the
-	// progress bar, usually [0,100]
-	public ProgressRenderer(int min, int max) {
+/**
+ * Extends JProgressBar and implements TableCellRenderer. This class represents
+ * the progress bar of the download table which indicates the progress of the
+ * download.
+ */
+public class ProgressRenderer extends JProgressBar implements TableCellRenderer {
+    /**
+     * ProgressRenderer constructor. It receives the interval of the
+     * progress bar, usually [0,100]
+     * @param min
+     * @param max
+     */
+    ProgressRenderer(int min, int max) {
 		super(min, max);
 	}
 
-	// Returns the component used for drawing the cell.
-	// This method is used to configure the renderer appropriately before
-	// drawing.
+    /**
+     * Returns the component used for drawing the cell.
+     * This method is used to configure the renderer appropriately before
+     * drawing.
+     * @param table
+     * @param value
+     * @param isSelected
+     * @param hasFocus
+     * @param row
+     * @param column
+     * @return
+     */
 	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column) {
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		setValue((int) ((Float) value).floatValue());
 		return this;
 	}
